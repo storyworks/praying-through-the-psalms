@@ -1,4 +1,15 @@
 export async function fetchPsalm(id: string) {
+  // For local development testing
+  if (process.env.NODE_ENV === "development") {
+    return {
+      data: {
+        id: id,
+        reference: `Psalm ${id.replace("PSA.", "")}`,
+        content: "<p>Test psalm content for development.</p>",
+      },
+    };
+  }
+
   const API_KEY = process.env.BIBLE_API_KEY;
   const BIBLE_ID = "de4e12af7f28f599-02";
 

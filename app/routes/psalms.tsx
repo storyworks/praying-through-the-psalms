@@ -19,14 +19,31 @@ export async function loader() {
 
   try {
     const psalmIds = getTodaysPsalms();
-    console.log("Psalm IDs:", psalmIds); // Debug log
+    console.log("Fetching psalms:", psalmIds); // Debug log
 
-    const psalmsData = await Promise.all(psalmIds.map((id) => fetchPsalm(id)));
+    const psalmsData = await Promise.all(
+      psalmIds.map(async (id) => {
+        try {
+          return await fetchPsalm(id);
+        } catch (error) {
+          console.error(`Failed to fetch psalm ${id}:`, error);
+          throw error;
+        }
+      })
+    );
+
+    if (!psalmsData || psalmsData.length === 0) {
+      throw new Error("No psalms data returned");
+    }
+
     return { psalms: psalmsData };
   } catch (error) {
     console.error("Loader error:", error);
-    const message = error instanceof Error ? error.message : "Unknown error";
-    throw new Error(`Failed to load psalms: ${message}`);
+    throw new Error(
+      `Failed to load psalms: ${
+        error instanceof Error ? error.message : "Unknown error"
+      }`
+    );
   }
 }
 
