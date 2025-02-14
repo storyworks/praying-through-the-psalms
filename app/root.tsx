@@ -5,12 +5,12 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
-} from "react-router";
+  type LinksFunction,
+} from "react-router-dom";
 
-import type { Route } from "./+types/root";
 import stylesheet from "./app.css?url";
 
-export const links: Route.LinksFunction = () => [
+export const links: LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
   {
     rel: "preconnect",
@@ -30,10 +30,19 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Daily Psalms</title>
         <Meta />
         <Links />
       </head>
       <body>
+        <header className="p-4 border-b">
+          <nav>
+            <a href="/" className="mr-4">
+              Home
+            </a>
+            <a href="/psalms">Today's Psalms</a>
+          </nav>
+        </header>
         {children}
         <ScrollRestoration />
         <Scripts />
@@ -46,7 +55,7 @@ export default function App() {
   return <Outlet />;
 }
 
-export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
+export function ErrorBoundary({ error }: { error: unknown }) {
   let message = "Oops!";
   let details = "An unexpected error occurred.";
   let stack: string | undefined;
