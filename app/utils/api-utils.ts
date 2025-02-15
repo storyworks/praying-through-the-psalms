@@ -1,30 +1,78 @@
-export async function fetchPsalm(id: string) {
-  // For local development testing
-  if (process.env.NODE_ENV === "development") {
-    return {
+import { JSDOM } from "jsdom";
+
+function parseNLTResponse(htmlContent: string) {
+  const dom = new JSDOM(htmlContent);
+  const doc = dom.window.document;
+
+  // Get all psalm containers
+  const passages = doc.querySelectorAll("section");
+
+  return Array.from(passages).map((passage) => {
+    const verses: { [key: string]: string } = {};
+
+    // Get all verse containers within this psalm
+    const verseExports = passage.querySelectorAll("verse_export");
+
+    const chapter = verseExports[0]?.getAttribute("ch");
+    console.log("chapter", chapter);
+
+    verseExports.forEach((verseExport) => {
+      const verseNumber = verseExport.getAttribute("vn");
+      if (!verseNumber) return;
+
+      const lines = Array.from(
+        verseExport.querySelectorAll(
+          ".poet1,.poet1-vn, .poet1-vn-sp, .poet2, .poet1-vn-hd"
+        )
+      )
+        .map((line) => {
+          // Remove .tn elements before getting text
+          line.querySelectorAll(".tn, .a-tn").forEach((tn) => tn.remove());
+          return line.textContent?.replace(/^\d+/, "").trim();
+        })
+        .filter(Boolean);
+
+      verses[+verseNumber] = lines.join(" ");
+    });
+
+    return { chapter, verses };
+  });
+}
+
+// curl -X GET "https://api.nlt.to/api/passages?ref=PSALM.119" \ -H "Authorization: Bearer 82c8e752-e79c-4196-8675-88c93b511857" \ -H "Accept: application/json"
+
+export async function fetchPsalms(ids: string[]) {
+  const API_KEY = process.env.NLT_API_KEY;
+  if (!API_KEY) {
+    throw new Error("NLT API key not configured");
+  }
+
+  const psalmRefs = ids.map((id) => id).join(",");
+
+  try {
+    const response = await fetch(
+      `https://api.nlt.to/api/passages?key=${API_KEY}&ref=${psalmRefs}`
+    );
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("API Error:", errorText);
+      throw new Error(`API returned ${response.status}`);
+    }
+
+    const htmlContent = await response.text();
+    const versesArray = parseNLTResponse(htmlContent);
+
+    console.log("versesArray", versesArray);
+
+    return ids.map((id, index) => ({
       data: {
         id: id,
-        reference: `Psalm ${id.replace("PSA.", "")}`,
-        content: "<p>Test psalm content for development.</p>",
+        content: versesArray[index] || {},
       },
-    };
+    }));
+  } catch (error) {
+    console.error("Fetch error:", error);
+    throw error;
   }
-
-  const API_KEY = process.env.BIBLE_API_KEY;
-  const BIBLE_ID = "de4e12af7f28f599-02";
-
-  const response = await fetch(
-    `https://api.scripture.api.bible/v1/bibles/${BIBLE_ID}/chapters/${id}`,
-    {
-      headers: {
-        "api-key": API_KEY ?? "", // Provide empty string as fallback
-      },
-    }
-  );
-
-  if (!response.ok) {
-    throw new Error("Failed to fetch psalm");
-  }
-
-  return response.json();
 }

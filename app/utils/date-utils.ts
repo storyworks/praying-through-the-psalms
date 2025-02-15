@@ -3,18 +3,19 @@ const PSALMS_PER_DAY = 5;
 
 export function getTodaysPsalms(): string[] {
   const today = new Date();
-  const dayOfYear = Math.floor(
-    (today.getTime() - new Date(today.getFullYear(), 0, 0).getTime()) /
-      (1000 * 60 * 60 * 24)
-  );
+  const dayOfMonth = today.getDate(); // Gets 1-31
 
-  const startingPsalm = (((dayOfYear - 1) * PSALMS_PER_DAY) % TOTAL_PSALMS) + 1;
+  if (dayOfMonth == 31) {
+    return [`Psalm.119`];
+  } else {
+    return [
+      `Psalm.${0 + dayOfMonth}`,
+      `Psalm.${30 + dayOfMonth}`,
+      `Psalm.${60 + dayOfMonth}`,
 
-  return Array.from({ length: PSALMS_PER_DAY }, (_, i) => {
-    const psalmNumber =
-      startingPsalm + i <= TOTAL_PSALMS
-        ? startingPsalm + i
-        : (startingPsalm + i) % TOTAL_PSALMS;
-    return `PSA.${psalmNumber}`;
-  });
+      `Psalm.${90 + dayOfMonth}`,
+
+      `Psalm.${120 + dayOfMonth}`,
+    ];
+  }
 }

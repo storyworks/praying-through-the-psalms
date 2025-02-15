@@ -1,36 +1,24 @@
 import { useLoaderData } from "react-router-dom";
 import { getTodaysPsalms } from "../utils/date-utils";
-import { fetchPsalm } from "../utils/api-utils";
+import { fetchPsalms } from "../utils/api-utils";
 
 interface PsalmData {
   data: {
     id: string;
     reference: string;
-    content: string;
+    content: {
+      chapter: number;
+      verses: Record<string, string>;
+    };
   };
 }
 
 export async function loader() {
-  const API_KEY = process.env.BIBLE_API_KEY;
-
-  if (!API_KEY) {
-    throw new Error("Bible API key is not configured");
-  }
-
   try {
     const psalmIds = getTodaysPsalms();
     console.log("Fetching psalms:", psalmIds); // Debug log
 
-    const psalmsData = await Promise.all(
-      psalmIds.map(async (id) => {
-        try {
-          return await fetchPsalm(id);
-        } catch (error) {
-          console.error(`Failed to fetch psalm ${id}:`, error);
-          throw error;
-        }
-      })
-    );
+    const psalmsData = await fetchPsalms(psalmIds);
 
     if (!psalmsData || psalmsData.length === 0) {
       throw new Error("No psalms data returned");
@@ -58,12 +46,15 @@ export default function Psalms() {
         {psalms.map((psalm) => (
           <article key={psalm.data.id} className="prose mx-auto">
             <h2 className="text-2xl font-semibold mb-4">
-              {psalm.data.reference}
+              Psalm {psalm.data.content.chapter}
             </h2>
-            <div
-              dangerouslySetInnerHTML={{ __html: psalm.data.content }}
-              className="leading-relaxed"
-            />
+            <div className="space-y-2">
+              {Object.entries(psalm.data.content.verses).map(([num, text]) => (
+                <p key={num}>
+                  <span className="font-semibold">{num}</span> {text}
+                </p>
+              ))}
+            </div>
           </article>
         ))}
       </div>
