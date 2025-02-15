@@ -1,18 +1,30 @@
-export function getTodaysPsalms(): string[] {
-  const today = new Date();
-  const dayOfMonth = today.getDate(); // Gets 1-31
+export function getTodaysPsalms(dayOfMonth?: number): string[] {
+  const todayOnServer = new Date(new Date());
+  const day = dayOfMonth ?? todayOnServer.getDate();
 
-  if (dayOfMonth == 31) {
+  if (day == 31) {
     return [`Psalm.119`];
   } else {
     return [
-      `Psalm.${0 + dayOfMonth}`,
-      `Psalm.${30 + dayOfMonth}`,
-      `Psalm.${60 + dayOfMonth}`,
+      `Psalm.${0 + day}`,
+      `Psalm.${30 + day}`,
+      `Psalm.${60 + day}`,
+      `Psalm.${90 + day}`,
+      `Psalm.${120 + day}`,
+    ].filter(Boolean);
+  }
+}
 
-      `Psalm.${90 + dayOfMonth}`,
-
-      `Psalm.${120 + dayOfMonth}`,
-    ];
+export function getOrdinalSuffix(day: number): string {
+  if (day > 3 && day < 21) return "th";
+  switch (day % 10) {
+    case 1:
+      return "st";
+    case 2:
+      return "nd";
+    case 3:
+      return "rd";
+    default:
+      return "th";
   }
 }
