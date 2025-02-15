@@ -39,8 +39,6 @@ function parseNLTResponse(htmlContent: string) {
   });
 }
 
-// curl -X GET "https://api.nlt.to/api/passages?ref=PSALM.119" \ -H "Authorization: Bearer 82c8e752-e79c-4196-8675-88c93b511857" \ -H "Accept: application/json"
-
 export async function fetchPsalms(ids: string[]) {
   const API_KEY = process.env.NLT_API_KEY;
   if (!API_KEY) {

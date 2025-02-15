@@ -1,6 +1,3 @@
-const TOTAL_PSALMS = 150;
-const PSALMS_PER_DAY = 5;
-
 export function getTodaysPsalms(): string[] {
   const today = new Date();
   const dayOfMonth = today.getDate(); // Gets 1-31
