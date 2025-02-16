@@ -1,6 +1,7 @@
 export function getTodaysPsalms(dayOfMonth?: number): string[] {
   const todayOnServer = new Date(new Date());
   const day = dayOfMonth ?? todayOnServer.getDate();
+  //   const day = 1;
 
   if (day == 31) {
     return [`Psalm.119`];

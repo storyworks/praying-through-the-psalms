@@ -8,7 +8,7 @@ function parseNLTResponse(htmlContent: string) {
   const passages = doc.querySelectorAll("section");
 
   return Array.from(passages).map((passage) => {
-    const verses: { [key: string]: string } = {};
+    const verses: { [key: string]: { text: string[]; space?: boolean } } = {};
 
     // Get all verse containers within this psalm
     const verseExports = passage.querySelectorAll("verse_export");
@@ -20,9 +20,21 @@ function parseNLTResponse(htmlContent: string) {
       const verseNumber = verseExport.getAttribute("vn");
       if (!verseNumber) return;
 
+      // poet1 = first line
+      // vn = verse number
+      // sp = space above line
+      // hd = heading above line
+      // ch = chapter above line
+      // poet2 = subsequent lines
+
+      verses[+verseNumber] = { text: [] };
+      if (verseExport.querySelector(".poet1-vn-sp")) {
+        verses[+verseNumber].space = true;
+      }
+
       const lines = Array.from(
         verseExport.querySelectorAll(
-          ".poet1,.poet1-vn, .poet1-vn-sp, .poet2, .poet1-vn-hd"
+          ".poet1,.poet1-vn, .poet1-vn-sp, .poet1-vn-hd, .poet1-vn-ch, .poet1-vn-ch-hd, .poet2, .poet-fr"
         )
       )
         .map((line) => {
@@ -30,9 +42,11 @@ function parseNLTResponse(htmlContent: string) {
           line.querySelectorAll(".tn, .a-tn").forEach((tn) => tn.remove());
           return line.textContent?.replace(/^\d+/, "").trim();
         })
-        .filter(Boolean);
+        .filter(
+          (line): line is string => typeof line === "string" && line.length > 0
+        );
 
-      verses[+verseNumber] = lines.join(" ");
+      verses[+verseNumber].text = lines;
     });
 
     return { chapter, verses };
@@ -60,8 +74,6 @@ export async function fetchPsalms(ids: string[]) {
 
     const htmlContent = await response.text();
     const versesArray = parseNLTResponse(htmlContent);
-
-    console.log("versesArray", versesArray);
 
     return ids.map((id, index) => ({
       data: {

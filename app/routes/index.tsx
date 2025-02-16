@@ -5,8 +5,8 @@ export default function Index() {
         <h1 className="text-4xl font-bold mb-6">Daily Psalms</h1>
 
         <p className="mb-8 text-lg">
-          Read through the Psalms with a curated selection of five chapters each
-          day.
+          Pray through the Psalms with a selection of five chapters each day and
+          Psalm 119 on the 31st day of the month
         </p>
 
         <a

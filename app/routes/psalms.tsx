@@ -9,7 +9,7 @@ interface PsalmData {
     reference: string;
     content: {
       chapter: number;
-      verses: Record<string, string>;
+      verses: Record<string, { text: string[]; space?: boolean }>;
     };
   };
 }
@@ -43,6 +43,8 @@ export default function Psalms() {
 
   const { psalms } = useLoaderData() as { psalms: PsalmData[] };
 
+  console.log("psalms", psalms);
+
   return (
     <main className="container mx-auto p-8">
       <h1 className="text-3xl font-bold mb-8 text-center">
@@ -56,10 +58,22 @@ export default function Psalms() {
             <h2 className="text-2xl font-semibold mb-4">
               Psalm {psalm.data.content.chapter}
             </h2>
-            <div className="space-y-2">
-              {Object.entries(psalm.data.content.verses).map(([num, text]) => (
-                <p key={num}>
-                  <span className="font-semibold">{num}</span> {text}
+            <div>
+              {Object.entries(psalm.data.content.verses).map(([num, verse]) => (
+                <p
+                  key={num}
+                  className={`relative${verse.space ? " mt-4" : ""}`}
+                >
+                  <span className="absolute -left-6 text-xs text-gray-400 text-right w-5 top-[3px]">
+                    {num}{" "}
+                  </span>
+                  {verse.text[0]}
+                  {verse.text.slice(1).map((line, i) => (
+                    <>
+                      <br />
+                      <span className="pl-4">{line}</span>
+                    </>
+                  ))}
                 </p>
               ))}
             </div>
