@@ -35,7 +35,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        <header className="border-b">
+        <header className="fixed top-0 left-0 right-0 bg-neutral-100 dark:bg-gray-950 z-50 shadow-xl shadow-neutral-100">
           <nav className="p-1 mt-1 flex items-center">
             <a href="/" className="ml-2 mr-3 text-3xl">
               🕯️

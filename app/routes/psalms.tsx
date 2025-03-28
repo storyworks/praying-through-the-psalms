@@ -51,7 +51,7 @@ export default function Psalms() {
   console.log("psalms", psalms);
 
   return (
-    <main className="container mx-auto p-8">
+    <main className="container mx-auto p-8 mt-12">
       <h1 className="text-3xl font-bold mb-8 text-center">
         Psalms for the {dayOfMonth}
         {getOrdinalSuffix(dayOfMonth)}
