@@ -33,6 +33,16 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <title>Daily Psalms</title>
         <Meta />
         <Links />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin=""
+        />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&family=Shippori+Mincho:wght@400&display=swap"
+          rel="stylesheet"
+        />
       </head>
       <body>
         <header className="p-4 border-b">

@@ -4,14 +4,14 @@ export function getTodaysPsalms(dayOfMonth?: number): string[] {
   //   const day = 1;
 
   if (day == 31) {
-    return [`Psalm.119`];
+    return [`119`];
   } else {
     return [
-      `Psalm.${0 + day}`,
-      `Psalm.${30 + day}`,
-      `Psalm.${60 + day}`,
-      `Psalm.${90 + day}`,
-      `Psalm.${120 + day}`,
+      `${0 + day}`,
+      `${30 + day}`,
+      `${60 + day}`,
+      `${90 + day}`,
+      `${120 + day}`,
     ].filter(Boolean);
   }
 }
