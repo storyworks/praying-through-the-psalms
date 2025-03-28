@@ -18,7 +18,7 @@ export default {
         ],
       },
       fontSize: {
-        "verse-size": "1.05rem",
+        "verse-size": "1.1rem",
       },
     },
   },

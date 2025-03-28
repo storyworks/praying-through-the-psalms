@@ -35,12 +35,15 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        <header className="p-4 border-b">
-          <nav>
-            <a href="/" className="mr-4">
-              Home
+        <header className="border-b">
+          <nav className="p-1 mt-1 flex items-center">
+            <a href="/" className="ml-2 mr-3 text-3xl">
+              🕯️
             </a>
             <a href="/psalms">Today's Psalms</a>
+            {/* <a href="/" className="ml-auto mr-2 text-3xl">
+              🛠️
+            </a> */}
           </nav>
         </header>
         {children}

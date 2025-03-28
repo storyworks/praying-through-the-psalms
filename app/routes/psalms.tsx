@@ -60,15 +60,15 @@ export default function Psalms() {
       <div className="max-w-3xl mx-auto space-y-12">
         {psalms.map((psalm) => (
           <article key={psalm.data.id} className="prose mx-auto">
-            <h2 className="text-2xl font-semibold mb-4">
+            <h2 className="text-2xl font-semibold">
               Psalm {psalm.data.content.chapter}
             </h2>
-            <h3 className="text-lg font-semibold italic">
+            <h3 className="text-lg font-semibold italic text-gray-600">
               {psalm.data.content.subheading}
             </h3>
-            {psalm.data.content.title && (
+            {/* {psalm.data.content.title && (
               <h4 className="text-md italic">{psalm.data.content.title}</h4>
-            )}
+            )} */}
             <div>
               {Object.entries(psalm.data.content.verses).map(([num, verse]) => (
                 <>
