@@ -59,7 +59,7 @@ export async function fetchPsalms(ids: string[]) {
     throw new Error("NLT API key not configured");
   }
 
-  const psalmRefs = ids.map((id) => id).join(",");
+  const psalmRefs = ids.map((id) => `Psalm.${id}`).join(",");
 
   try {
     const response = await fetch(
