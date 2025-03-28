@@ -49,7 +49,7 @@ function parseNLTResponse(htmlContent: string) {
 
       const lines = Array.from(
         verseExport.querySelectorAll(
-          ".poet1,.poet1-vn, .poet1-vn-sp, .poet1-vn-hd, .poet1-vn-ch, .poet1-vn-ch-hd, .poet2, .poet-fr, .selah"
+          ".poet1,.poet1-vn, .poet1-vn-sp, .poet1-vn-hd, .poet1-vn-ch, .poet1-vn-ch-hd, .poet2, .poet-fr"
         )
       )
         .map((line) => {

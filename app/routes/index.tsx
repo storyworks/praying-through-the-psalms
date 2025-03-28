@@ -11,7 +11,7 @@ export default function Index() {
 
         <a
           href="/psalms"
-          className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
+          className="inline-block text-white px-6 py-3 rounded-lg hover:bg-gradient-to-r hover:from-amber-900 hover:to-amber-800 transition-colors bg-gradient-to-r from-amber-800 to-amber-700"
         >
           Read Today's Psalms
         </a>
