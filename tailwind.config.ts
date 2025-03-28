@@ -5,8 +5,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        lora: ["Lora", "serif"],
-        shippori: ['"Shippori Mincho"', "serif"],
+        spectral: ['"Spectral"', "serif"],
         sans: [
           '"Inter"',
           "ui-sans-serif",
