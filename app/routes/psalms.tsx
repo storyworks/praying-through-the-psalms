@@ -9,7 +9,12 @@ interface PsalmData {
     reference: string;
     content: {
       chapter: number;
-      verses: Record<string, { text: string[]; space?: boolean }>;
+      subheading: string;
+      title?: string;
+      verses: Record<
+        string,
+        { text: string[]; space?: boolean; heading?: string }
+      >;
     };
   };
 }
@@ -58,23 +63,38 @@ export default function Psalms() {
             <h2 className="text-2xl font-semibold mb-4">
               Psalm {psalm.data.content.chapter}
             </h2>
+            <h3 className="text-lg font-semibold italic">
+              {psalm.data.content.subheading}
+            </h3>
+            {psalm.data.content.title && (
+              <h4 className="text-md italic">{psalm.data.content.title}</h4>
+            )}
             <div>
               {Object.entries(psalm.data.content.verses).map(([num, verse]) => (
-                <p
-                  key={num}
-                  className={`relative${verse.space ? " mt-4" : ""}`}
-                >
-                  <span className="absolute -left-6 text-xs text-gray-400 text-right w-5 top-[3px]">
-                    {num}{" "}
-                  </span>
-                  {verse.text[0]}
-                  {verse.text.slice(1).map((line, i) => (
-                    <>
-                      <br />
-                      <span className="pl-4">{line}</span>
-                    </>
-                  ))}
-                </p>
+                <>
+                  {verse.heading && (
+                    <h5 className="font-bold mt-6  text-gray-300">
+                      {verse.heading}
+                    </h5>
+                  )}
+                  <p
+                    key={num}
+                    className={`relative${
+                      verse.space ? " mt-4" : ""
+                    } text-verse-size`}
+                  >
+                    <span className="absolute -left-6 text-xs text-gray-400 text-right w-5 top-[3px]">
+                      {num}{" "}
+                    </span>
+                    {verse.text[0]}
+                    {verse.text.slice(1).map((line, i) => (
+                      <>
+                        <br />
+                        <span className="pl-4">{line}</span>
+                      </>
+                    ))}
+                  </p>
+                </>
               ))}
             </div>
           </article>

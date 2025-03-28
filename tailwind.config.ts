@@ -17,6 +17,9 @@ export default {
           '"Noto Color Emoji"',
         ],
       },
+      fontSize: {
+        "verse-size": "1.05rem",
+      },
     },
   },
   plugins: [],

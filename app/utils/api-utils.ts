@@ -8,13 +8,19 @@ function parseNLTResponse(htmlContent: string) {
   const passages = doc.querySelectorAll("section");
 
   return Array.from(passages).map((passage) => {
-    const verses: { [key: string]: { text: string[]; space?: boolean } } = {};
+    const verses: {
+      [key: string]: { text: string[]; space?: boolean; heading?: string };
+    } = {};
 
     // Get all verse containers within this psalm
     const verseExports = passage.querySelectorAll("verse_export");
 
     const chapter = verseExports[0]?.getAttribute("ch");
-    console.log("chapter", chapter);
+    const subheading = verseExports[0]?.querySelector(".subhead")?.textContent;
+    const titleElement = verseExports[0]?.querySelector(".psa-title");
+
+    titleElement?.querySelectorAll(".tn, .a-tn").forEach((tn) => tn.remove());
+    const title = titleElement?.textContent;
 
     verseExports.forEach((verseExport) => {
       const verseNumber = verseExport.getAttribute("vn");
@@ -26,15 +32,24 @@ function parseNLTResponse(htmlContent: string) {
       // hd = heading above line
       // ch = chapter above line
       // poet2 = subsequent lines
+      // a-tn / tn = asterisk and sidenote
 
       verses[+verseNumber] = { text: [] };
       if (verseExport.querySelector(".poet1-vn-sp")) {
         verses[+verseNumber].space = true;
       }
+      if (subheading != null) {
+        verses[1].space = true;
+      }
+
+      const hebrewElement = verseExport.querySelector(".psa-hebrew");
+      if (hebrewElement?.textContent) {
+        verses[+verseNumber].heading = hebrewElement.textContent.trim();
+      }
 
       const lines = Array.from(
         verseExport.querySelectorAll(
-          ".poet1,.poet1-vn, .poet1-vn-sp, .poet1-vn-hd, .poet1-vn-ch, .poet1-vn-ch-hd, .poet2, .poet-fr"
+          ".poet1,.poet1-vn, .poet1-vn-sp, .poet1-vn-hd, .poet1-vn-ch, .poet1-vn-ch-hd, .poet2, .poet-fr, .selah"
         )
       )
         .map((line) => {
@@ -49,7 +64,7 @@ function parseNLTResponse(htmlContent: string) {
       verses[+verseNumber].text = lines;
     });
 
-    return { chapter, verses };
+    return { chapter, subheading, title, verses };
   });
 }
 
