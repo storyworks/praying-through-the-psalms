@@ -34,9 +34,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Meta />
         <Links />
       </head>
-      <body>
-        <header className="fixed top-0 left-0 right-0 bg-neutral-100 dark:bg-gray-950 z-50 shadow-xl shadow-neutral-100">
-          <nav className="p-1 mt-1 flex items-center">
+      <body className="bg-stone-50 dark:bg-stone-900">
+        <header className="fixed top-0 left-0 right-0 z-50 bg-stone-100 dark:bg-stone-950 shadow-[0_1px_10px_10px] shadow-stone-100 dark:shadow-stone-950">
+          <nav className="pt-2 px-1 mt-1 flex items-center">
             <a href="/" className="ml-2 mr-3 text-3xl">
               🕯️
             </a>

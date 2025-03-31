@@ -51,11 +51,11 @@ export default function Psalms() {
   console.log("psalms", psalms);
 
   return (
-    <main className="container mx-auto p-8 mt-12">
-      <h1 className="text-3xl font-bold mb-8 text-center">
+    <main className="container mx-auto p-8 mt-12 text-stone-900 dark:text-stone-100">
+      {/* <h1 className="text-3xl font-bold  mb-8 text-center">
         Psalms for the {dayOfMonth}
         {getOrdinalSuffix(dayOfMonth)}
-      </h1>
+      </h1> */}
 
       <div className="max-w-3xl mx-auto space-y-12">
         {psalms.map((psalm) => (
@@ -63,7 +63,7 @@ export default function Psalms() {
             <h2 className="text-2xl font-semibold">
               Psalm {psalm.data.content.chapter}
             </h2>
-            <h3 className="text-lg font-semibold italic text-gray-600">
+            <h3 className="text-lg font-semibold italic text-stone-500">
               {psalm.data.content.subheading}
             </h3>
             {/* {psalm.data.content.title && (
@@ -73,7 +73,7 @@ export default function Psalms() {
               {Object.entries(psalm.data.content.verses).map(([num, verse]) => (
                 <>
                   {verse.heading && (
-                    <h5 className="font-bold mt-6  text-gray-300">
+                    <h5 className="font-bold mt-6  text-stone-400">
                       {verse.heading}
                     </h5>
                   )}
@@ -83,7 +83,7 @@ export default function Psalms() {
                       verse.space ? " mt-4" : ""
                     } text-verse-size`}
                   >
-                    <span className="absolute -left-6 text-xs text-gray-400 text-right w-5 top-[3px]">
+                    <span className="absolute -left-6 text-xs text-stone-400 text-right w-5 top-[3px]">
                       {num}{" "}
                     </span>
                     {verse.text[0]}
