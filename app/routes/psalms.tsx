@@ -1,7 +1,7 @@
 import { useLoaderData, useSearchParams } from "react-router-dom";
-import { getOrdinalSuffix, getTodaysPsalms } from "../utils/date-utils";
+import { getTodaysPsalms } from "../utils/date-utils";
 import { fetchPsalms } from "../utils/api-utils";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 interface PsalmData {
   data: {
@@ -39,41 +39,34 @@ export async function loader({ request }: { request: Request }) {
 }
 
 export default function Psalms() {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const dayOfMonth = new Date().getDate();
-
-  useEffect(() => {
-    setSearchParams({ date: dayOfMonth.toString() });
-  }, [setSearchParams]);
+  const [activeChapter, setActiveChapter] = useState<number>();
 
   const { psalms } = useLoaderData() as { psalms: PsalmData[] };
 
-  console.log("psalms", psalms);
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const chapter = parseInt(entry.target.id.replace("psalm-", ""));
+            setActiveChapter(chapter);
+          }
+        });
+      },
+      {
+        threshold: 0.3,
+        rootMargin: "-100px 0px",
+      }
+    );
+
+    const psalmElements = document.querySelectorAll('[id^="psalm-"]');
+    psalmElements.forEach((element) => observer.observe(element));
+
+    return () => observer.disconnect();
+  }, []);
 
   return (
-    <main className="flex justify-center mx-auto p-8 mt-12 text-stone-900 dark:text-stone-100">
-      {/* <h1 className="text-3xl font-bold  mb-8 text-center">
-        Psalms for the {dayOfMonth}
-        {getOrdinalSuffix(dayOfMonth)}
-      </h1> */}
-
-      {/* Add the psalm navigation buttons */}
-      <nav className="fixed right-4 top-1/2 -translate-y-1/2 flex flex-col gap-2 z-40">
-        {psalms?.map((psalm) => (
-          <button
-            key={psalm.data.id}
-            onClick={() => {
-              document
-                .querySelector(`#psalm-${psalm.data.content.chapter}`)
-                ?.scrollIntoView({ behavior: "smooth" });
-            }}
-            className="w-8 h-8 rounded-full bg-stone-200 dark:bg-stone-800 hover:bg-stone-300 dark:hover:bg-stone-700 flex items-center justify-center text-sm font-medium transition-colors"
-          >
-            {psalm.data.content.chapter}
-          </button>
-        ))}
-      </nav>
-
+    <main className="container mx-auto px-8 py-16">
       <div className="max-w-3xl mx-auto space-y-12">
         {psalms.map((psalm) => (
           <article
@@ -87,9 +80,6 @@ export default function Psalms() {
             <h3 className="text-lg font-semibold italic text-stone-500">
               {psalm.data.content.subheading}
             </h3>
-            {/* {psalm.data.content.title && (
-              <h4 className="text-md italic">{psalm.data.content.title}</h4>
-            )} */}
             <div>
               {Object.entries(psalm.data.content.verses).map(([num, verse]) => (
                 <>
@@ -121,6 +111,28 @@ export default function Psalms() {
           </article>
         ))}
       </div>
+
+      <nav className="fixed right-4 top-1/2 -translate-y-1/2 flex flex-col gap-2 z-40">
+        {psalms.map((psalm) => (
+          <button
+            key={psalm.data.id}
+            onClick={() => {
+              document
+                .querySelector(`#psalm-${psalm.data.content.chapter}`)
+                ?.scrollIntoView({ behavior: "smooth" });
+            }}
+            className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-all
+              ${
+                activeChapter === +psalm.data.content.chapter
+                  ? "bg-stone-400 dark:bg-stone-600 text-white shadow-lg scale-110"
+                  : "bg-stone-200 dark:bg-stone-800 hover:bg-stone-300 dark:hover:bg-stone-700"
+              }
+            `}
+          >
+            {psalm.data.content.chapter}
+          </button>
+        ))}
+      </nav>
     </main>
   );
 }
