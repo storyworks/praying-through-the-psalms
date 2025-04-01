@@ -51,15 +51,36 @@ export default function Psalms() {
   console.log("psalms", psalms);
 
   return (
-    <main className="container mx-auto p-8 mt-12 text-stone-900 dark:text-stone-100">
+    <main className="flex justify-center mx-auto p-8 mt-12 text-stone-900 dark:text-stone-100">
       {/* <h1 className="text-3xl font-bold  mb-8 text-center">
         Psalms for the {dayOfMonth}
         {getOrdinalSuffix(dayOfMonth)}
       </h1> */}
 
+      {/* Add the psalm navigation buttons */}
+      <nav className="fixed right-4 top-1/2 -translate-y-1/2 flex flex-col gap-2 z-40">
+        {psalms?.map((psalm) => (
+          <button
+            key={psalm.data.id}
+            onClick={() => {
+              document
+                .querySelector(`#psalm-${psalm.data.content.chapter}`)
+                ?.scrollIntoView({ behavior: "smooth" });
+            }}
+            className="w-8 h-8 rounded-full bg-stone-200 dark:bg-stone-800 hover:bg-stone-300 dark:hover:bg-stone-700 flex items-center justify-center text-sm font-medium transition-colors"
+          >
+            {psalm.data.content.chapter}
+          </button>
+        ))}
+      </nav>
+
       <div className="max-w-3xl mx-auto space-y-12">
         {psalms.map((psalm) => (
-          <article key={psalm.data.id} className="prose mx-auto">
+          <article
+            key={psalm.data.id}
+            id={`psalm-${psalm.data.content.chapter}`}
+            className="prose mx-auto scroll-mt-16"
+          >
             <h2 className="text-2xl font-semibold">
               Psalm {psalm.data.content.chapter}
             </h2>
