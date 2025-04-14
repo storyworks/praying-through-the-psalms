@@ -1,7 +1,7 @@
 import { useLoaderData, useSearchParams } from "react-router-dom";
 import { getTodaysPsalms } from "../utils/date-utils";
 import { fetchPsalms } from "../utils/api-utils";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { PsalmNavigation } from "~/components/PsalmNavigation";
 
 export interface PsalmData {
@@ -40,32 +40,14 @@ export async function loader({ request }: { request: Request }) {
 }
 
 export default function Psalms() {
-  const [activeChapter, setActiveChapter] = useState<number>();
-
-  const { psalms } = useLoaderData() as { psalms: PsalmData[] };
+  const [searchParams, setSearchParams] = useSearchParams();
+  const dayOfMonth = new Date().getDate();
 
   useEffect(() => {
-    const isMobile = window.innerWidth < 768;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const chapter = parseInt(entry.target.id.replace("psalm-", ""));
-            setActiveChapter(chapter);
-          }
-        });
-      },
-      {
-        threshold: isMobile ? 0.1 : 0.3,
-        rootMargin: isMobile ? "-50px 0px" : "-100px 0px",
-      }
-    );
+    setSearchParams({ date: dayOfMonth.toString() });
+  }, [setSearchParams]);
 
-    const psalmElements = document.querySelectorAll('[id^="psalm-"]');
-    psalmElements.forEach((element) => observer.observe(element));
-
-    return () => observer.disconnect();
-  }, []);
+  const { psalms } = useLoaderData() as { psalms: PsalmData[] };
 
   return (
     <main className="container mx-auto px-8 py-16">
@@ -114,7 +96,7 @@ export default function Psalms() {
         ))}
       </div>
 
-      <PsalmNavigation psalms={psalms} activeChapter={activeChapter} />
+      <PsalmNavigation psalms={psalms} />
     </main>
   );
 }
